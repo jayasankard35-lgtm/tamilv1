@@ -1,4 +1,5 @@
-console.log("JS WORKING");
+console.log("APP JS LOADED");
+
 
 
 const BACKEND =
@@ -6,10 +7,17 @@ const BACKEND =
 
 
 
-function startMic(){
+const mic =
+document.getElementById("mic");
 
 
-alert("MIC BUTTON WORKING");
+const text =
+document.getElementById("text");
+
+
+const status =
+document.getElementById("status");
+
 
 
 const SpeechRecognition =
@@ -20,40 +28,59 @@ window.webkitSpeechRecognition;
 
 if(!SpeechRecognition){
 
-alert("Chrome browser required");
 
-return;
+status.innerHTML =
+"Chrome browser பயன்படுத்தவும்";
+
 
 }
 
 
 
-let recognition =
+else{
+
+
+const recognition =
 new SpeechRecognition();
 
 
 
 recognition.lang="ta-IN";
 
+recognition.continuous=false;
+
+recognition.interimResults=false;
+
+
+
+mic.onclick=function(){
+
+
+console.log("MIC CLICK");
+
+
+status.innerHTML =
+"கேட்கிறேன்...";
+
 
 recognition.start();
 
 
+};
 
-document.getElementById("status").innerHTML =
-"கேட்கிறேன்...";
 
 
 
 recognition.onresult=function(event){
 
 
-let question =
+
+const question =
 event.results[0][0].transcript;
 
 
 
-document.getElementById("text").innerHTML =
+text.innerHTML =
 "நீங்கள்:<br>"+question;
 
 
@@ -62,18 +89,40 @@ sendMessage(question);
 
 
 
+};
+
+
+
+
+recognition.onerror=function(error){
+
+
+console.log(error);
+
+
+status.innerHTML =
+"Mic error";
+
+
+};
+
+
 }
 
 
-
-}
 
 
 
 async function sendMessage(question){
 
 
-const res =
+
+status.innerHTML =
+"பதில் வருகிறது...";
+
+
+
+const response =
 await fetch(
 
 BACKEND,
@@ -88,35 +137,63 @@ headers:{
 
 },
 
+
 body:JSON.stringify({
 
 message:question
 
 })
 
-});
+}
+
+);
+
 
 
 const data =
-await res.json();
+await response.json();
 
 
 
-document.getElementById("text").innerHTML +=
+text.innerHTML +=
 
-"<br><br>AI:<br>"+data.reply;
+"<br><br>AI:<br>"+
+
+data.reply;
 
 
 
-let speech =
-new SpeechSynthesisUtterance(data.reply);
+speak(data.reply);
+
+
+
+status.innerHTML =
+"முடிந்தது";
+
+
+}
+
+
+
+
+
+function speak(message){
+
+
+
+const speech =
+new SpeechSynthesisUtterance(message);
+
 
 
 speech.lang="ta-IN";
 
 
-speechSynthesis.speak(speech);
+speech.rate=1;
 
+
+
+speechSynthesis.speak(speech);
 
 
 }

@@ -1,158 +1,64 @@
-*{
-
-box-sizing:border-box;
-
-}
+console.log("JS WORKING");
 
 
-
-body{
-
-
-margin:0;
-
-height:100vh;
+const BACKEND =
+"https://tamilv1.onrender.com/chat";
 
 
-display:flex;
 
-align-items:center;
-
-justify-content:center;
+function startMic(){
 
 
-background:#e8f3ff;
+alert("MIC BUTTON WORKING");
 
 
-font-family:Arial,sans-serif;
+const SpeechRecognition =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
 
+
+
+if(!SpeechRecognition){
+
+alert("Chrome browser required");
+
+return;
 
 }
 
 
 
-.app{
+let recognition =
+new SpeechRecognition();
 
 
-width:90%;
 
-max-width:450px;
+recognition.lang="ta-IN";
 
 
-background:white;
+recognition.start();
 
 
-padding:25px;
 
+document.getElementById("status").innerHTML =
+"கேட்கிறேன்...";
 
-border-radius:20px;
 
 
-text-align:center;
+recognition.onresult=function(event){
 
 
-box-shadow:0 10px 30px #999;
+let question =
+event.results[0][0].transcript;
 
 
-}
 
+document.getElementById("text").innerHTML =
+"நீங்கள்:<br>"+question;
 
 
-h1{
 
-color:#0759c9;
-
-}
-
-
-
-#text{
-
-
-margin-top:20px;
-
-
-background:#eef6ff;
-
-
-padding:20px;
-
-
-border-radius:15px;
-
-
-min-height:120px;
-
-
-font-size:20px;
-
-
-}
-
-
-
-#status{
-
-
-margin-top:15px;
-
-
-color:#555;
-
-
-}
-
-
-
-
-#mic{
-
-
-position:fixed;
-
-
-right:25px;
-
-bottom:25px;
-
-
-
-width:80px;
-
-height:80px;
-
-
-
-border-radius:50%;
-
-
-border:none;
-
-
-background:#0759c9;
-
-
-color:white;
-
-
-font-size:40px;
-
-
-
-cursor:pointer;
-
-
-z-index:9999;
-
-
-
-display:flex;
-
-
-align-items:center;
-
-
-justify-content:center;
+sendMessage(question);
 
 
 
@@ -160,35 +66,57 @@ justify-content:center;
 
 
 
-#mic:active{
-
-
-transform:scale(0.9);
-
-
 }
 
 
 
-@media(max-width:500px){
+async function sendMessage(question){
 
 
-.app{
+const res =
+await fetch(
 
-padding:20px;
+BACKEND,
 
-}
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+message:question
+
+})
+
+});
 
 
-#mic{
+const data =
+await res.json();
 
 
-width:70px;
 
-height:70px;
+document.getElementById("text").innerHTML +=
+
+"<br><br>AI:<br>"+data.reply;
 
 
-}
+
+let speech =
+new SpeechSynthesisUtterance(data.reply);
+
+
+speech.lang="ta-IN";
+
+
+speechSynthesis.speak(speech);
+
 
 
 }

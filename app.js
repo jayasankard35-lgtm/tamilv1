@@ -1,7 +1,6 @@
 console.log("APP JS LOADED");
 
 
-
 const BACKEND =
 "https://tamilv1.onrender.com/chat";
 
@@ -28,14 +27,11 @@ window.webkitSpeechRecognition;
 
 if(!SpeechRecognition){
 
-
 status.innerHTML =
 "Chrome browser பயன்படுத்தவும்";
 
 
 }
-
-
 
 else{
 
@@ -47,16 +43,15 @@ new SpeechRecognition();
 
 recognition.lang="ta-IN";
 
+
 recognition.continuous=false;
+
 
 recognition.interimResults=false;
 
 
 
-mic.onclick=function(){
-
-
-console.log("MIC CLICK");
+mic.onclick=()=>{
 
 
 status.innerHTML =
@@ -71,11 +66,11 @@ recognition.start();
 
 
 
-recognition.onresult=function(event){
+
+recognition.onresult=(event)=>{
 
 
-
-const question =
+let question =
 event.results[0][0].transcript;
 
 
@@ -88,23 +83,23 @@ text.innerHTML =
 sendMessage(question);
 
 
-
 };
 
 
 
 
-recognition.onerror=function(error){
 
-
-console.log(error);
+recognition.onerror=(e)=>{
 
 
 status.innerHTML =
 "Mic error";
 
+console.log(e);
+
 
 };
+
 
 
 }
@@ -112,17 +107,17 @@ status.innerHTML =
 
 
 
-
 async function sendMessage(question){
-
 
 
 status.innerHTML =
 "பதில் வருகிறது...";
 
 
+try{
 
-const response =
+
+let response =
 await fetch(
 
 BACKEND,
@@ -137,29 +132,23 @@ headers:{
 
 },
 
-
 body:JSON.stringify({
 
 message:question
 
 })
 
-}
-
-);
+});
 
 
-
-const data =
+let data =
 await response.json();
 
 
 
 text.innerHTML +=
 
-"<br><br>AI:<br>"+
-
-data.reply;
+"<br><br>AI:<br>"+data.reply;
 
 
 
@@ -173,6 +162,20 @@ status.innerHTML =
 
 }
 
+catch(error){
+
+
+console.log(error);
+
+
+status.innerHTML =
+"Server error";
+
+
+}
+
+
+}
 
 
 
@@ -180,17 +183,14 @@ status.innerHTML =
 function speak(message){
 
 
-
-const speech =
+let speech =
 new SpeechSynthesisUtterance(message);
-
 
 
 speech.lang="ta-IN";
 
 
 speech.rate=1;
-
 
 
 speechSynthesis.speak(speech);

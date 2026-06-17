@@ -1,42 +1,131 @@
 body{
 
-text-align:center;
+margin:0;
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+
+background:#e8f4ff;
+
+
 font-family:Arial;
+
 
 }
 
 
+
+.container{
+
+
+width:90%;
+
+max-width:450px;
+
+
+background:white;
+
+
+padding:30px;
+
+
+border-radius:20px;
+
+
+text-align:center;
+
+
+box-shadow:0 10px 30px #aaa;
+
+
+}
+
+
+
+h1{
+
+color:#0759c9;
+
+}
+
+
+
+#text{
+
+
+margin-top:20px;
+
+
+padding:20px;
+
+
+min-height:100px;
+
+
+background:#f0f8ff;
+
+
+border-radius:15px;
+
+
+font-size:20px;
+
+
+}
+
+
+
+#status{
+
+margin-top:20px;
+
+color:#555;
+
+}
+
+
+
 #mic{
 
+
 position:fixed;
+
 
 bottom:30px;
 
 right:30px;
 
 
-width:90px;
+width:85px;
 
-height:90px;
+height:85px;
 
 
 border-radius:50%;
 
 
-font-size:45px;
+border:none;
 
 
-background:blue;
+background:#0759c9;
+
 
 color:white;
 
 
-border:none;
+font-size:40px;
 
 
 cursor:pointer;
 
 
 z-index:999999;
+
 
 }

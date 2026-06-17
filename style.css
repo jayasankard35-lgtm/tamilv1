@@ -1,35 +1,61 @@
-body{
+*{
 
-margin:0;
-height:100vh;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-background:#e8f2ff;
-
-font-family:Arial;
+box-sizing:border-box;
 
 }
 
 
-.box{
+
+body{
+
+
+margin:0;
+
+height:100vh;
+
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+
+background:#e8f3ff;
+
+
+font-family:Arial,sans-serif;
+
+
+}
+
+
+
+.app{
+
+
+width:90%;
+
+max-width:450px;
+
 
 background:white;
 
-width:90%;
-max-width:450px;
 
 padding:25px;
 
+
 border-radius:20px;
 
-box-shadow:0 10px 30px #aaa;
 
 text-align:center;
 
+
+box-shadow:0 10px 30px #999;
+
+
 }
+
 
 
 h1{
@@ -39,82 +65,130 @@ color:#0759c9;
 }
 
 
-#chat{
+
+#text{
+
 
 margin-top:20px;
 
+
 background:#eef6ff;
 
-padding:15px;
+
+padding:20px;
+
 
 border-radius:15px;
 
+
 min-height:120px;
 
-text-align:left;
 
-font-size:18px;
+font-size:20px;
+
 
 }
+
 
 
 #status{
 
+
 margin-top:15px;
+
 
 color:#555;
 
+
 }
+
 
 
 
 #mic{
 
+
 position:fixed;
 
+
 right:25px;
+
 bottom:25px;
 
 
-width:75px;
-height:75px;
+
+width:80px;
+
+height:80px;
+
 
 
 border-radius:50%;
+
 
 border:none;
 
 
 background:#0759c9;
 
+
 color:white;
 
-font-size:35px;
+
+font-size:40px;
+
+
+
+cursor:pointer;
+
+
+z-index:9999;
+
+
+
+display:flex;
+
+
+align-items:center;
+
+
+justify-content:center;
+
 
 
 }
+
+
+
+#mic:active{
+
+
+transform:scale(0.9);
+
+
+}
+
 
 
 @media(max-width:500px){
 
-.box{
 
-padding:18px;
+.app{
 
-}
-
-
-#chat{
-
-font-size:16px;
+padding:20px;
 
 }
+
 
 #mic{
 
-width:65px;
-height:65px;
+
+width:70px;
+
+height:70px;
+
 
 }
+
 
 }

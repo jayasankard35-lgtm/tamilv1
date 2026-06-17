@@ -1,122 +1,42 @@
-console.log("JS WORKING");
+body{
 
-
-const BACKEND =
-"https://tamilv1.onrender.com/chat";
-
-
-
-function startMic(){
-
-
-alert("MIC BUTTON WORKING");
-
-
-const SpeechRecognition =
-window.SpeechRecognition ||
-window.webkitSpeechRecognition;
-
-
-
-if(!SpeechRecognition){
-
-alert("Chrome browser required");
-
-return;
+text-align:center;
+font-family:Arial;
 
 }
 
 
+#mic{
 
-let recognition =
-new SpeechRecognition();
+position:fixed;
 
+bottom:30px;
 
-
-recognition.lang="ta-IN";
-
-
-recognition.start();
+right:30px;
 
 
+width:90px;
 
-document.getElementById("status").innerHTML =
-"கேட்கிறேன்...";
-
-
-
-recognition.onresult=function(event){
+height:90px;
 
 
-let question =
-event.results[0][0].transcript;
+border-radius:50%;
 
 
-
-document.getElementById("text").innerHTML =
-"நீங்கள்:<br>"+question;
+font-size:45px;
 
 
+background:blue;
 
-sendMessage(question);
-
-
-
-}
+color:white;
 
 
-
-}
-
+border:none;
 
 
-async function sendMessage(question){
+cursor:pointer;
 
 
-const res =
-await fetch(
-
-BACKEND,
-
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"application/json"
-
-},
-
-body:JSON.stringify({
-
-message:question
-
-})
-
-});
-
-
-const data =
-await res.json();
-
-
-
-document.getElementById("text").innerHTML +=
-
-"<br><br>AI:<br>"+data.reply;
-
-
-
-let speech =
-new SpeechSynthesisUtterance(data.reply);
-
-
-speech.lang="ta-IN";
-
-
-speechSynthesis.speak(speech);
-
-
+z-index:999999;
 
 }

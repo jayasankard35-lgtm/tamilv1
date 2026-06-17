@@ -1,75 +1,89 @@
+console.log("APP JS LOADED");
+
+
+
 const BACKEND =
+
 "https://tamilv1.onrender.com/chat";
 
 
-const mic = document.getElementById("mic");
-const text = document.getElementById("text");
-const status = document.getElementById("status");
+
+const mic =
+document.getElementById("mic");
 
 
-// Check browser support
+const text =
+document.getElementById("text");
+
+
+const status =
+document.getElementById("status");
+
+
+
+
 const SpeechRecognition =
 window.SpeechRecognition ||
 window.webkitSpeechRecognition;
 
 
+
 if(!SpeechRecognition){
 
-status.innerText =
-"இந்த browser microphone support இல்லை";
 
-mic.disabled = true;
+status.innerText =
+"Browser microphone support இல்லை";
+
 
 }
+
+
+
 else{
 
 
-const recognition = new SpeechRecognition();
 
-
-recognition.lang = "ta-IN";
-
-recognition.continuous = false;
-
-recognition.interimResults = false;
+const recognition =
+new SpeechRecognition();
 
 
 
-mic.onclick = function(){
+recognition.lang="ta-IN";
+
+
+recognition.continuous=false;
+
+
+recognition.interimResults=false;
+
+
+
+
+mic.addEventListener("click",()=>{
+
+
+console.log("MIC CLICKED");
 
 
 status.innerText =
 "கேட்கிறேன்...";
 
 
-text.innerHTML =
-"பேசுங்கள்...";
-
-
 recognition.start();
 
 
-};
+});
 
 
 
 
 
-recognition.onstart = ()=>{
-
-console.log("Mic started");
-
-};
+recognition.onresult=(event)=>{
 
 
-
-
-
-recognition.onresult = (event)=>{
-
-
-const question =
+let question =
 event.results[0][0].transcript;
+
 
 
 console.log(question);
@@ -77,7 +91,10 @@ console.log(question);
 
 
 text.innerHTML =
-"நீங்கள்:<br>"+question;
+
+"நீங்கள்:<br>"+
+question;
+
 
 
 
@@ -90,26 +107,14 @@ sendMessage(question);
 
 
 
-recognition.onerror = (event)=>{
+recognition.onerror=(event)=>{
 
 
 console.log(event.error);
 
 
 status.innerText =
-"Mic error: "+event.error;
-
-
-};
-
-
-
-
-
-recognition.onend = ()=>{
-
-
-console.log("Mic stopped");
+"Mic error";
 
 
 };
@@ -124,6 +129,7 @@ console.log("Mic stopped");
 
 
 async function sendMessage(question){
+
 
 
 status.innerText =
@@ -141,13 +147,17 @@ BACKEND,
 
 {
 
+
 method:"POST",
 
+
 headers:{
+
 
 "Content-Type":"application/json"
 
 },
+
 
 body:JSON.stringify({
 
@@ -155,7 +165,10 @@ message:question
 
 })
 
+
 });
+
+
 
 
 const data =
@@ -167,6 +180,7 @@ text.innerHTML +=
 
 
 "<br><br>AI:<br>"+
+
 data.reply;
 
 
@@ -180,6 +194,8 @@ status.innerText =
 
 
 }
+
+
 
 catch(error){
 
@@ -200,21 +216,25 @@ status.innerText =
 
 
 
-function speak(answer){
+
+
+function speak(message){
 
 
 const speech =
-new SpeechSynthesisUtterance(answer);
+new SpeechSynthesisUtterance(message);
 
 
-speech.lang =
-"ta-IN";
+
+speech.lang="ta-IN";
 
 
-speech.rate = 1;
+speech.rate=1;
 
 
-window.speechSynthesis.speak(speech);
+
+speechSynthesis.speak(speech);
+
 
 
 }

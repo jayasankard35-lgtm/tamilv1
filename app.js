@@ -2,60 +2,51 @@ const BACKEND =
 "https://tamilv1.onrender.com/chat";
 
 
-const mic =
-document.getElementById("mic");
+const mic = document.getElementById("mic");
+const text = document.getElementById("text");
+const status = document.getElementById("status");
 
 
-const chat =
-document.getElementById("chat");
+// Check browser support
+const SpeechRecognition =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
 
 
-const status =
-document.getElementById("status");
+if(!SpeechRecognition){
+
+status.innerText =
+"இந்த browser microphone support இல்லை";
+
+mic.disabled = true;
+
+}
+else{
+
+
+const recognition = new SpeechRecognition();
+
+
+recognition.lang = "ta-IN";
+
+recognition.continuous = false;
+
+recognition.interimResults = false;
 
 
 
-
-const recognition =
-new(window.SpeechRecognition ||
-window.webkitSpeechRecognition)();
+mic.onclick = function(){
 
 
-
-recognition.lang="ta-IN";
-
-recognition.continuous=false;
+status.innerText =
+"கேட்கிறேன்...";
 
 
-
-mic.onclick=()=>{
-
-
-status.innerText="கேட்கிறேன்...";
+text.innerHTML =
+"பேசுங்கள்...";
 
 
 recognition.start();
-
-}
-
-
-
-
-recognition.onresult=(event)=>{
-
-
-let text =
-event.results[0][0].transcript;
-
-
-
-chat.innerHTML=
-
-"<b>நீங்கள்:</b><br>"+text;
-
-
-
-sendMessage(text);
 
 
 };
@@ -64,31 +55,86 @@ sendMessage(text);
 
 
 
+recognition.onstart = ()=>{
+
+console.log("Mic started");
+
+};
 
 
-async function sendMessage(text){
 
 
-status.innerText=
-"பதில் வருகிறது...";
+
+recognition.onresult = (event)=>{
+
+
+const question =
+event.results[0][0].transcript;
+
+
+console.log(question);
+
+
+
+text.innerHTML =
+"நீங்கள்:<br>"+question;
+
+
+
+sendMessage(question);
+
+
+};
+
+
+
+
+
+recognition.onerror = (event)=>{
+
+
+console.log(event.error);
+
+
+status.innerText =
+"Mic error: "+event.error;
+
+
+};
+
+
+
+
+
+recognition.onend = ()=>{
+
+
+console.log("Mic stopped");
+
+
+};
+
+
+
+
+}
+
+
+
+
+
+async function sendMessage(question){
+
+
+status.innerText =
+"AI பதில் வருகிறது...";
 
 
 
 try{
 
 
-let controller =
-new AbortController();
-
-
-setTimeout(
-()=>controller.abort(),
-15000
-);
-
-
-
-let response =
+const response =
 await fetch(
 
 BACKEND,
@@ -103,31 +149,24 @@ headers:{
 
 },
 
-
-signal:controller.signal,
-
-
 body:JSON.stringify({
 
-message:text
+message:question
 
 })
-
 
 });
 
 
-
-let data =
+const data =
 await response.json();
 
 
 
+text.innerHTML +=
 
-chat.innerHTML +=
 
-
-"<br><br><b>AI:</b><br>"+
+"<br><br>AI:<br>"+
 data.reply;
 
 
@@ -136,50 +175,46 @@ speak(data.reply);
 
 
 
-status.innerText="முடிந்தது";
+status.innerText =
+"முடிந்தது";
+
+
+}
+
+catch(error){
+
+
+console.log(error);
+
+
+status.innerText =
+"Server error";
+
+
+}
 
 
 }
 
 
 
-catch(e){
 
 
-chat.innerHTML +=
-
-"<br><br>Server error";
+function speak(answer){
 
 
-status.innerText=
-"மீண்டும் முயற்சிக்கவும்";
+const speech =
+new SpeechSynthesisUtterance(answer);
 
 
-}
+speech.lang =
+"ta-IN";
 
 
-
-}
-
+speech.rate = 1;
 
 
-
-
-
-
-function speak(text){
-
-
-let voice =
-new SpeechSynthesisUtterance(text);
-
-
-voice.lang="ta-IN";
-
-voice.rate=1;
-
-
-speechSynthesis.speak(voice);
+window.speechSynthesis.speak(speech);
 
 
 }

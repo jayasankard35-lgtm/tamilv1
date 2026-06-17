@@ -1,25 +1,15 @@
-console.log("APP JS LOADED");
-
+console.log("JS WORKING");
 
 
 const BACKEND =
-
 "https://tamilv1.onrender.com/chat";
 
 
 
-const mic =
-document.getElementById("mic");
+function startMic(){
 
 
-const text =
-document.getElementById("text");
-
-
-const status =
-document.getElementById("status");
-
-
+alert("MIC BUTTON WORKING");
 
 
 const SpeechRecognition =
@@ -30,20 +20,15 @@ window.webkitSpeechRecognition;
 
 if(!SpeechRecognition){
 
+alert("Chrome browser required");
 
-status.innerText =
-"Browser microphone support இல்லை";
-
+return;
 
 }
 
 
 
-else{
-
-
-
-const recognition =
+let recognition =
 new SpeechRecognition();
 
 
@@ -51,34 +36,16 @@ new SpeechRecognition();
 recognition.lang="ta-IN";
 
 
-recognition.continuous=false;
-
-
-recognition.interimResults=false;
-
-
-
-
-mic.addEventListener("click",()=>{
-
-
-console.log("MIC CLICKED");
-
-
-status.innerText =
-"கேட்கிறேன்...";
-
-
 recognition.start();
 
 
-});
+
+document.getElementById("status").innerHTML =
+"கேட்கிறேன்...";
 
 
 
-
-
-recognition.onresult=(event)=>{
+recognition.onresult=function(event){
 
 
 let question =
@@ -86,39 +53,12 @@ event.results[0][0].transcript;
 
 
 
-console.log(question);
-
-
-
-text.innerHTML =
-
-"நீங்கள்:<br>"+
-question;
-
+document.getElementById("text").innerHTML =
+"நீங்கள்:<br>"+question;
 
 
 
 sendMessage(question);
-
-
-};
-
-
-
-
-
-recognition.onerror=(event)=>{
-
-
-console.log(event.error);
-
-
-status.innerText =
-"Mic error";
-
-
-};
-
 
 
 
@@ -126,38 +66,27 @@ status.innerText =
 
 
 
+}
+
 
 
 async function sendMessage(question){
 
 
-
-status.innerText =
-"AI பதில் வருகிறது...";
-
-
-
-try{
-
-
-const response =
+const res =
 await fetch(
 
 BACKEND,
 
 {
 
-
 method:"POST",
 
-
 headers:{
-
 
 "Content-Type":"application/json"
 
 },
-
 
 body:JSON.stringify({
 
@@ -165,72 +94,25 @@ message:question
 
 })
 
-
 });
 
 
-
-
 const data =
-await response.json();
+await res.json();
 
 
 
-text.innerHTML +=
+document.getElementById("text").innerHTML +=
 
-
-"<br><br>AI:<br>"+
-
-data.reply;
+"<br><br>AI:<br>"+data.reply;
 
 
 
-speak(data.reply);
-
-
-
-status.innerText =
-"முடிந்தது";
-
-
-}
-
-
-
-catch(error){
-
-
-console.log(error);
-
-
-status.innerText =
-"Server error";
-
-
-}
-
-
-}
-
-
-
-
-
-
-
-function speak(message){
-
-
-const speech =
-new SpeechSynthesisUtterance(message);
-
+let speech =
+new SpeechSynthesisUtterance(data.reply);
 
 
 speech.lang="ta-IN";
-
-
-speech.rate=1;
-
 
 
 speechSynthesis.speak(speech);
